@@ -1,0 +1,16 @@
+spring:
+  application:
+    name: social
+  jpa:
+    hibernate:
+      ddl-auto: update
+    show-sql: true
+
+  datasource:
+    url: jdbc:mysql://localhost:3306/social
+    username: root
+    password:
+
+
+
+
