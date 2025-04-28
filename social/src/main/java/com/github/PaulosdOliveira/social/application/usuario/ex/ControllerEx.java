@@ -33,9 +33,10 @@ public class ControllerEx {
     @ResponseStatus(HttpStatus.INTERNAL_SERVER_ERROR)
     @ExceptionHandler(RuntimeException.class)
     public String internlaError(RuntimeException e){
-        System.out.println(e);
+        System.out.println(e.getMessage());
         return "Ocorreu um erro inesperado";
     }
+
 
 
 }
