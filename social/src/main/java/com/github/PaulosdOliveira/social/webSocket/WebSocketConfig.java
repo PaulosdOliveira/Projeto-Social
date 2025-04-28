@@ -1,5 +1,6 @@
 package com.github.PaulosdOliveira.social.webSocket;
 
+import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.messaging.simp.config.MessageBrokerRegistry;
 import org.springframework.scheduling.concurrent.ThreadPoolTaskScheduler;
@@ -13,22 +14,28 @@ import org.springframework.web.socket.config.annotation.WebSocketTransportRegist
 public class WebSocketConfig implements WebSocketMessageBrokerConfigurer {
 
 
+    @Bean
+    public ThreadPoolTaskScheduler threadPoolTaskScheduler() {
+        return new ThreadPoolTaskScheduler();
+    }
+
+
     @Override
-    public void configureMessageBroker(MessageBrokerRegistry config){
+    public void configureMessageBroker(MessageBrokerRegistry config) {
         config.enableSimpleBroker("/mensagem")
                 .setHeartbeatValue(new long[]{7000, 7000})
-                .setTaskScheduler(new ThreadPoolTaskScheduler());
-        config.setApplicationDestinationPrefixes("/social");
+                .setTaskScheduler(threadPoolTaskScheduler());
+        config.setApplicationDestinationPrefixes("/app");
     }
 
     @Override
-    public void registerStompEndpoints(StompEndpointRegistry registry){
+    public void registerStompEndpoints(StompEndpointRegistry registry) {
         registry.addEndpoint("/social")
                 .setAllowedOriginPatterns("*");
     }
 
     @Override
-    public void configureWebSocketTransport(WebSocketTransportRegistration registration){
+    public void configureWebSocketTransport(WebSocketTransportRegistration registration) {
         // Definindo o tamanho máximo de mensagens como 8129 bytes
         registration.setMessageSizeLimit(8129);
 

@@ -1,20 +1,36 @@
 package com.github.PaulosdOliveira.social.webSocket;
 
+import com.fasterxml.jackson.databind.ObjectMapper;
+import com.github.PaulosdOliveira.social.application.usuario.mensagem.MensagemService;
+import com.github.PaulosdOliveira.social.model.usuario.mensagem.EnvioMensagemDTO;
+import com.github.PaulosdOliveira.social.model.usuario.mensagem.MensagemDTO;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.messaging.handler.annotation.DestinationVariable;
 import org.springframework.messaging.handler.annotation.MessageMapping;
 import org.springframework.messaging.handler.annotation.SendTo;
 import org.springframework.stereotype.Controller;
-import java.util.UUID;
+
 
 
 @Controller
-public class SocketController  {
+public class SocketController {
 
+    @Autowired
+    private MensagemService mensagemService;
 
-    @MessageMapping("/mensagem/{idDirect}")
-    @SendTo("/direct/{idDirect}")
-    public String enviarMensagem(@DestinationVariable UUID idDirect){
+    @MessageMapping("app/social/mensagem/{idDirect}")
+    @SendTo("/mensagem/direct/{idDirect}")
+    public String enviarMensagem(@DestinationVariable Long idDirect, EnvioMensagemDTO mensagemEnviada) {
+        MensagemDTO mensagem = mensagemService.salvarMensagem(mensagemEnviada);
+        return toJson(mensagem);
+    }
 
-        return "";
+    public String toJson(MensagemDTO mensagem) {
+        try {
+            return new ObjectMapper().writeValueAsString(mensagem);
+        } catch (Exception e) {
+            System.out.println(e.getMessage());
+            return null;
+        }
     }
 }

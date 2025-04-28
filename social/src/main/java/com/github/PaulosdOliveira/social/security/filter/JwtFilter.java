@@ -14,6 +14,7 @@ import org.springframework.security.core.userdetails.User;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.web.filter.OncePerRequestFilter;
 import org.springframework.stereotype.Component;
+
 import java.io.IOException;
 
 @Component
@@ -45,7 +46,10 @@ public class JwtFilter extends OncePerRequestFilter {
     @Override
     public boolean shouldNotFilter(HttpServletRequest request) throws ServletException {
         String uri = request.getRequestURI();
-        return uri.contains("/usuario");
+        System.out.println(uri + " ///////////////////////");
+        boolean userRequest = uri.contains("/usuario");
+        boolean webSocketRequest = uri.contains("/social");
+        return userRequest || webSocketRequest;
     }
 
     public String getToken(HttpServletRequest request) throws ServletException {
