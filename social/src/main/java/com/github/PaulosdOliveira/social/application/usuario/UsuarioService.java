@@ -4,12 +4,17 @@ import com.github.PaulosdOliveira.social.infra.repository.UsuarioRepository;
 import com.github.PaulosdOliveira.social.jwt.JwtService;
 import com.github.PaulosdOliveira.social.model.usuario.CadastroUsuarioDTO;
 import com.github.PaulosdOliveira.social.model.usuario.LoginUsuarioDTO;
+import com.github.PaulosdOliveira.social.model.usuario.NomeUsuarioDTO;
 import com.github.PaulosdOliveira.social.model.usuario.Usuario;
+import com.github.PaulosdOliveira.social.model.usuario.mensagem.UsuarioDTO;
 import com.github.PaulosdOliveira.social.validation.UsuarioValidator;
 import lombok.RequiredArgsConstructor;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
+
+import java.util.List;
 
 @RequiredArgsConstructor
 @Service
@@ -21,27 +26,43 @@ public class UsuarioService {
     private final JwtService jwtService;
 
 
-
-    public void cadastrarUsuario(CadastroUsuarioDTO dadosCadastro){
-       dadosCadastro.setSenha(encoder.encode(dadosCadastro.getSenha()));
+    public void cadastrarUsuario(CadastroUsuarioDTO dadosCadastro) {
+        dadosCadastro.setSenha(encoder.encode(dadosCadastro.getSenha()));
         validator.validar(dadosCadastro.getEmail());
         repository.save(new Usuario(dadosCadastro));
     }
 
-    public String logarUsuario(LoginUsuarioDTO dadosLogin){
+    public String logarUsuario(LoginUsuarioDTO dadosLogin) {
         var usuario = repository.findByEmail(dadosLogin.getEmail());
-        if(usuario != null){
+        if (usuario != null) {
             String senhaDigitada = dadosLogin.getSenha();
-            if(encoder.matches(senhaDigitada, usuario.getSenha())) return jwtService.getToken(usuario);
+            if (encoder.matches(senhaDigitada, usuario.getSenha())) return jwtService.getToken(usuario);
         }
         throw new UsernameNotFoundException("Email e/ou senha incorretos");
     }
 
-    public Usuario findByEmail(String email){
+    @Transactional
+    public void salvarFotoUsuario(Long idUsuario, byte[] arquivo) {
+        repository.salvarFoto(arquivo, idUsuario);
+    }
+
+    public byte[] buscarFotoUsuario(Long idUsuario) {
+        return repository.findFotoById(idUsuario);
+    }
+
+    public List<NomeUsuarioDTO> findByNomeLike(String nome) {
+        return repository.buscarPorNome(nome);
+    }
+
+    public UsuarioDTO carregarPerfilUsuario(Long id){
+        return repository.carregarPerfilUsuario(id);
+    }
+
+    public Usuario findByEmail(String email) {
         return repository.findByEmail(email);
     }
 
-    public boolean existsByEmail(String email){
+    public boolean existsByEmail(String email) {
         return repository.existsByEmail(email);
     }
 }

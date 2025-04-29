@@ -23,6 +23,9 @@ public class Usuario {
     @Column(nullable = false, length = 300)
     private String senha;
 
+    @Column()
+    private byte[] foto;
+
     public Usuario(CadastroUsuarioDTO dadosCadastro) {
         BeanUtils.copyProperties(dadosCadastro, this);
     }

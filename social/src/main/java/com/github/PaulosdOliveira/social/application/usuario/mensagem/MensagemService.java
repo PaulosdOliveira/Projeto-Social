@@ -1,16 +1,16 @@
 package com.github.PaulosdOliveira.social.application.usuario.mensagem;
 
+import com.github.PaulosdOliveira.social.model.usuario.mensagem.EnvioMensagemDTO;
 import com.github.PaulosdOliveira.social.infra.repository.MensagemRepository;
 import com.github.PaulosdOliveira.social.infra.repository.UsuarioRepository;
-import com.github.PaulosdOliveira.social.model.usuario.mensagem.EnvioMensagemDTO;
-import com.github.PaulosdOliveira.social.model.usuario.mensagem.Mensagem;
 import com.github.PaulosdOliveira.social.model.usuario.mensagem.MensagemDTO;
-import jakarta.validation.Valid;
+import com.github.PaulosdOliveira.social.model.usuario.mensagem.Mensagem;
+import org.springframework.transaction.annotation.Transactional;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
-import org.springframework.transaction.annotation.Transactional;
-import java.time.LocalTime;
 import java.time.temporal.ChronoUnit;
+import jakarta.validation.Valid;
+import java.time.LocalTime;
 import java.util.ArrayList;
 import java.util.List;
 

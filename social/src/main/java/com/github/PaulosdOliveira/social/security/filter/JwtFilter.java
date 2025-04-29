@@ -8,6 +8,7 @@ import jakarta.servlet.ServletException;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpMethod;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.core.userdetails.User;
@@ -47,9 +48,9 @@ public class JwtFilter extends OncePerRequestFilter {
     public boolean shouldNotFilter(HttpServletRequest request) throws ServletException {
         String uri = request.getRequestURI();
         System.out.println(uri + " ///////////////////////");
-        boolean userRequest = uri.contains("/usuario");
-        boolean webSocketRequest = uri.contains("/social");
-        return userRequest || webSocketRequest;
+        boolean fotoRequetFilter = ! (uri.contains("/usuario/foto") && request.getMethod().equals(HttpMethod.POST.toString()));
+        System.out.println(fotoRequetFilter);
+        return fotoRequetFilter;
     }
 
     public String getToken(HttpServletRequest request) throws ServletException {

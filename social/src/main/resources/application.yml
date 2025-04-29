@@ -2,8 +2,6 @@ spring:
   application:
     name: social
   jpa:
-    hibernate:
-      ddl-auto: update
     show-sql: true
 
   datasource:
