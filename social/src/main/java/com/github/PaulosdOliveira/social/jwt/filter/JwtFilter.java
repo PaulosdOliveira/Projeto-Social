@@ -1,4 +1,4 @@
-package com.github.PaulosdOliveira.social.security.filter;
+package com.github.PaulosdOliveira.social.jwt.filter;
 
 import com.github.PaulosdOliveira.social.application.usuario.UsuarioService;
 import com.github.PaulosdOliveira.social.jwt.JwtService;
@@ -40,7 +40,6 @@ public class JwtFilter extends OncePerRequestFilter {
                 SecurityContextHolder.getContext().setAuthentication(new UsernamePasswordAuthenticationToken(userDetails, usuario.getId(), userDetails.getAuthorities()));
             }
         }
-
         filterChain.doFilter(request, response);
     }
 

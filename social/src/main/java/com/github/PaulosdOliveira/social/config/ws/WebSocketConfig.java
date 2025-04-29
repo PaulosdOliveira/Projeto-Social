@@ -1,4 +1,4 @@
-package com.github.PaulosdOliveira.social.webSocket;
+package com.github.PaulosdOliveira.social.config.ws;
 
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
