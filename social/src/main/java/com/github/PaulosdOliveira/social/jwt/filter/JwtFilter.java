@@ -2,7 +2,7 @@ package com.github.PaulosdOliveira.social.jwt.filter;
 
 import com.github.PaulosdOliveira.social.application.usuario.UsuarioService;
 import com.github.PaulosdOliveira.social.jwt.JwtService;
-import com.github.PaulosdOliveira.social.model.usuario.Usuario;
+import com.github.PaulosdOliveira.social.model.usuario.UsuarioDTO;
 import jakarta.servlet.FilterChain;
 import jakarta.servlet.ServletException;
 import jakarta.servlet.http.HttpServletRequest;
@@ -32,7 +32,7 @@ public class JwtFilter extends OncePerRequestFilter {
         String token = getToken(request);
         if (token != null) {
             String email = jwtService.getEmailByToken(token);
-            Usuario usuario = usuarioService.findByEmail(email);
+            UsuarioDTO usuario = usuarioService.findByEmail(email);
             if (usuario != null) {
                 UserDetails userDetails = User.withUsername(usuario.getEmail())
                         .password(usuario.getSenha())

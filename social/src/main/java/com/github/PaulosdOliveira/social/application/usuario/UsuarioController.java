@@ -2,8 +2,8 @@ package com.github.PaulosdOliveira.social.application.usuario;
 
 import com.github.PaulosdOliveira.social.model.usuario.CadastroUsuarioDTO;
 import com.github.PaulosdOliveira.social.model.usuario.LoginUsuarioDTO;
-import com.github.PaulosdOliveira.social.model.usuario.NomeUsuarioDTO;
-import com.github.PaulosdOliveira.social.model.usuario.mensagem.UsuarioDTO;
+import com.github.PaulosdOliveira.social.model.usuario.CartaoUsuarioDTO;
+import com.github.PaulosdOliveira.social.model.usuario.token.Token;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpHeaders;
@@ -13,6 +13,7 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
+
 import java.io.IOException;
 import java.util.List;
 
@@ -26,14 +27,15 @@ public class UsuarioController {
 
 
     @PostMapping
-    public ResponseEntity<Void> cadastarUsuario(@RequestBody @Valid CadastroUsuarioDTO dadosCadastro) {
-        service.cadastrarUsuario(dadosCadastro);
-        return ResponseEntity.status(HttpStatus.CREATED).build();
+    public Token cadastarUsuario(@RequestBody @Valid CadastroUsuarioDTO dadosCadastro) {
+        String token = service.cadastrarUsuario(dadosCadastro);
+        return new Token(token);
     }
 
     @PostMapping("/login")
-    public String logarUsuario(@RequestBody @Valid LoginUsuarioDTO dadosLogin) {
-        return service.logarUsuario(dadosLogin);
+    public ResponseEntity<Token> logarUsuario(@RequestBody @Valid LoginUsuarioDTO dadosLogin) {
+        String token = service.logarUsuario(dadosLogin);
+        return ResponseEntity.ok(new Token(token));
     }
 
     @PostMapping("/foto")
@@ -43,7 +45,7 @@ public class UsuarioController {
     }
 
     @GetMapping("/foto/{idUsuario}")
-    public ResponseEntity<byte[]> renderizarFotoUsuario(@PathVariable Long idUsuario){
+    public ResponseEntity<byte[]> renderizarFotoUsuario(@PathVariable Long idUsuario) {
         byte[] fotoUsuario = service.buscarFotoUsuario(idUsuario);
         HttpHeaders headers = new HttpHeaders();
         headers.setContentLength(fotoUsuario.length);
@@ -51,13 +53,13 @@ public class UsuarioController {
         return new ResponseEntity<>(fotoUsuario, headers, HttpStatus.OK);
     }
 
-    @GetMapping("/{nome}")
-    public List<NomeUsuarioDTO> buscarUsuariosPorNome(@PathVariable String nome){
+    @GetMapping(params = "nome")
+    public List<CartaoUsuarioDTO> buscarUsuariosPorNome(@RequestParam String nome) {
         return service.findByNomeLike(nome);
     }
 
     @GetMapping(params = "idUsuario")
-    public UsuarioDTO carregarPerfilUsuario(@RequestParam Long idUsuario){
+    public CartaoUsuarioDTO carregarPerfilUsuario(@RequestParam Long idUsuario) {
         return service.carregarPerfilUsuario(idUsuario);
     }
 
